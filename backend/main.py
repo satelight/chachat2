@@ -2,13 +2,24 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Optional
 from fastapi.responses import StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
 import httpx
 import json
 
+OPENAI_API_KEY = "your-api-key-here"
+
+OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
+
 app = FastAPI()
 
-OPENAI_API_KEY = "your-api-key-here"
-OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
+# CORS設定（このコードをFastAPIインスタンス作成直後に追加）
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Svelteの開発サーバーURL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class ChatRequest(BaseModel):
@@ -53,6 +64,9 @@ async def ping():
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
-    return StreamingResponse(
+    print(request.message, request.model)
+    response = StreamingResponse(
         openai_stream(request.message, request.model), media_type="text/plain"
     )
+    print(response)
+    return response

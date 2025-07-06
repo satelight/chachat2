@@ -1,4 +1,7 @@
-async function fetchChatStream(message: string) {
+export async function fetchChatStream(
+    message: string,
+    onChunk: (chunk: string) => void
+): Promise<void> {
     const response = await fetch("http://localhost:8000/chat", {
         method: "POST",
         headers: {
@@ -6,25 +9,21 @@ async function fetchChatStream(message: string) {
         },
         body: JSON.stringify({
             message,
-            model: "gpt-3.5-turbo", // 任意、省略可
+            model: "gpt-3.5-turbo",
         }),
     });
 
     if (!response.ok || !response.body) {
-        throw new Error(`Failed to fetch chat stream: ${response.status}`);
+        throw new Error(`Fetch failed: ${response.status}`);
     }
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder("utf-8");
-    let result = "";
 
     while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         const chunk = decoder.decode(value, { stream: true });
-        console.log("chunk:", chunk); // 表示用
-        result += chunk;
+        onChunk(chunk);
     }
-
-    return result;
 }
