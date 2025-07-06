@@ -1,3 +1,26 @@
+# FastAPI OpenAI Proxy
+
+このプロジェクトは、FastAPI を使って OpenAI API に非同期でアクセスするサンプルです。
+
+## 構成
+
+- Python + FastAPI
+- 非同期 HTTP クライアント: httpx
+- エンドポイント: `/chat`
+
+## 前提条件
+
+- Python 3.8 以上
+- OpenAI APIキーを保持していること
+
+## セットアップ手順
+
+1. リポジトリをクローン
+
+```bash
+git clone <your-repo-url>
+cd backend
+
 # sv
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
