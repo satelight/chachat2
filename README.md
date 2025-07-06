@@ -20,6 +20,7 @@
 ```bash
 git clone <your-repo-url>
 cd backend
+uvicorn main:app --reload
 
 # sv
 
